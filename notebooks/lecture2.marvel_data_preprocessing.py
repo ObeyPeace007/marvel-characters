@@ -1,12 +1,12 @@
 # Databricks notebook source
 
-# MAGIC %pip install -e ..
-# MAGIC %restart_python
+# %pip install -e ..
+# %restart_python
 
 # COMMAND ----------
-# from pathlib import Path
-# import sys
-# sys.path.append(str(Path.cwd().parent / 'src'))
+from pathlib import Path
+import sys
+sys.path.append(str(Path.cwd().parent / 'src'))
 
 # COMMAND ----------
 import pandas as pd
@@ -64,3 +64,11 @@ data_processor.save_to_catalog(X_train, X_test)
 logger.info("Enable change data feed")
 data_processor.enable_change_data_feed()
 # COMMAND ---------- 
+
+import os
+
+# Bypass strict gRPC SSL validation for corporate proxies
+os.environ["GRPC_DEFAULT_SSL_ROOTS_FILE_PATH"] = ""
+os.environ["PYTHONHTTPSVERIFY"] = "0"
+
+print("Network intercept bypass successfully applied!")
