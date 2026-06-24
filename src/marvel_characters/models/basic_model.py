@@ -20,7 +20,6 @@ from pyspark.sql import SparkSession
 from sklearn.base import BaseEstimator, TransformerMixin
 from sklearn.compose import ColumnTransformer
 from sklearn.pipeline import Pipeline
-
 from marvel_characters.config import ProjectConfig, Tags
 
 
@@ -53,7 +52,6 @@ class BasicModel:
 
     def load_data(self) -> None:
         """Load training and testing data from Delta tables.
-
         Splits data into features (X_train, X_test) and target (y_train, y_test).
         """
         logger.info("🔄 Loading data from Databricks tables...")
