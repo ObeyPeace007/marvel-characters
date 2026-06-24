@@ -18,6 +18,10 @@
 #   → Data scientists (you)               → Apps, websites, other systems
 #
 #
+# Endpoint	A URL you can send data to
+# Request	The data you send (character features)
+# Response	What comes back (prediction: "alive"/"dead")
+# Endpoint = The address where your model "lives" on the internet.
 # =============================================================================
 # WHAT IS AN SDK?
 # =============================================================================
@@ -127,9 +131,7 @@ class ModelServing:
 
     def get_latest_model_version(self) -> str:
         """Retrieve the latest version of the model.
-
         :return: Latest version of the model as a string
-        
         HOW IT WORKS:
         ─────────────────────────────────────────────────────────────────────
         Unity Catalog has your model with multiple versions:
@@ -165,7 +167,6 @@ class ModelServing:
         
         PARAMETERS EXPLAINED:
         ─────────────────────────────────────────────────────────────────────
-        
         version:
             "latest" = use the alias to find version (recommended)
             "1", "2" = use specific version number
@@ -176,8 +177,7 @@ class ModelServing:
             "Large"  = ~64 requests/second (high traffic)
         
         scale_to_zero:
-            True  = Shut down when no one is using it (SAVES MONEY!)
-                    But: first request after idle takes ~10-30 seconds
+            True  = Shut down when no one is using it (SAVES MONEY!) But: first request after idle takes ~10-30 seconds
             False = Always running (faster, but costs money 24/7)
         
         For learning: Use Small + scale_to_zero=True (very cheap!)
@@ -192,8 +192,8 @@ class ModelServing:
         # ─────────────────────────────────────────────────────────────────
         # STEP 2: Get the version number
         # ─────────────────────────────────────────────────────────────────
-        # If "latest", look up the alias. Otherwise use the number given.
-        entity_version = self.get_latest_model_version() if version == "latest" else version
+        # If "latest", look up the alias. Otherwise use the number given. # latest ← Just a flag: "should I look it up?"
+        entity_version = self.get_latest_model_version() if version == "latest" else version 
 
         # ─────────────────────────────────────────────────────────────────
         # STEP 3: Define what model to serve and how

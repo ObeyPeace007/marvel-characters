@@ -762,6 +762,93 @@
 
 # MAGIC %md
 # MAGIC ---
+# MAGIC # Model Serving vs Loading Model Yourself
+# MAGIC 
+# MAGIC ## The Key Distinction
+# MAGIC 
+# MAGIC ```
+# MAGIC ┌─────────────────────────────────────────────────────────────────────────────┐
+# MAGIC │      mlflow.pyfunc.load_model()          vs        Model Serving            │
+# MAGIC ├─────────────────────────────────────────────────────────────────────────────┤
+# MAGIC │                                                                             │
+# MAGIC │   LOAD MODEL YOURSELF                    MODEL SERVING ENDPOINT             │
+# MAGIC │   ─────────────────────────────────      ─────────────────────────────────  │
+# MAGIC │                                                                             │
+# MAGIC │   Downloads model to YOUR machine        Model lives on Databricks          │
+# MAGIC │   (or notebook)                          server 24/7                        │
+# MAGIC │                                                                             │
+# MAGIC │   YOU run the prediction                 DATABRICKS runs prediction         │
+# MAGIC │   model.predict(data)                    for anyone who calls URL           │
+# MAGIC │                                                                             │
+# MAGIC │   Only YOU can use it                    ANY app can call the URL           │
+# MAGIC │   (need Python, MLflow, credentials)     (just needs HTTP)                  │
+# MAGIC │                                                                             │
+# MAGIC │   Good for: Testing, notebooks           Good for: Apps, production         │
+# MAGIC │                                                                             │
+# MAGIC └─────────────────────────────────────────────────────────────────────────────┘
+# MAGIC ```
+# MAGIC 
+# MAGIC ## Analogy
+# MAGIC 
+# MAGIC | Method | Analogy |
+# MAGIC |--------|---------|
+# MAGIC | `mlflow.pyfunc.load_model()` | **Download a recipe** and cook at home |
+# MAGIC | `MlflowClient` | **Browse the cookbook** (registry), pick what you want |
+# MAGIC | **Model Serving** | **Order from a restaurant** - they cook, you just eat |
+
+# COMMAND ----------
+
+# MAGIC %md
+# MAGIC ## Code Comparison
+# MAGIC 
+# MAGIC ```python
+# MAGIC # ═══════════════════════════════════════════════════════════════════════════
+# MAGIC # METHOD 1: Load model yourself (notebook/local)
+# MAGIC # ═══════════════════════════════════════════════════════════════════════════
+# MAGIC import mlflow
+# MAGIC 
+# MAGIC # YOU download and run the model
+# MAGIC model = mlflow.pyfunc.load_model("models:/my_model@latest-model")
+# MAGIC prediction = model.predict(data)  # Runs on YOUR machine
+# MAGIC 
+# MAGIC 
+# MAGIC # ═══════════════════════════════════════════════════════════════════════════
+# MAGIC # METHOD 2: Model Serving (API call)
+# MAGIC # ═══════════════════════════════════════════════════════════════════════════
+# MAGIC import requests
+# MAGIC 
+# MAGIC # You just CALL a URL - Databricks runs the model for you
+# MAGIC response = requests.post(
+# MAGIC     "https://databricks.../serving-endpoints/my-endpoint/invocations",
+# MAGIC     headers={"Authorization": f"Bearer {token}"},
+# MAGIC     json={"dataframe_records": data}
+# MAGIC )
+# MAGIC prediction = response.json()["predictions"]  # Databricks computed this
+# MAGIC ```
+# MAGIC 
+# MAGIC ## When to Use Which?
+# MAGIC 
+# MAGIC | Scenario | Use |
+# MAGIC |----------|-----|
+# MAGIC | Testing in notebook | `mlflow.pyfunc.load_model()` |
+# MAGIC | Building a website/app | **Model Serving** (API) |
+# MAGIC | Batch predictions (1M rows) | `load_model()` or Spark |
+# MAGIC | Real-time predictions | **Model Serving** (API) |
+# MAGIC | A/B testing (champion/challenger) | **Model Serving** |
+# MAGIC | Only you need predictions | `load_model()` |
+# MAGIC | Many apps/users need predictions | **Model Serving** |
+# MAGIC 
+# MAGIC ## Summary
+# MAGIC 
+# MAGIC **Model Serving** = "Make my model available as a URL so apps can use it without needing Python/MLflow"
+# MAGIC 
+# MAGIC - `load_model()` → YOU download model, YOU run predictions
+# MAGIC - Model Serving → Databricks hosts model, ANYONE can call URL
+
+# COMMAND ----------
+
+# MAGIC %md
+# MAGIC ---
 # MAGIC # Next Steps
 # MAGIC 
 # MAGIC Now that you understand the concepts, proceed to:
