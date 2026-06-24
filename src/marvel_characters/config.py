@@ -8,7 +8,6 @@ from pydantic import BaseModel
 
 class ProjectConfig(BaseModel):
     """Represent project configuration parameters loaded from YAML.
-
     Handles feature specifications, catalog details, and experiment parameters.
     Supports environment-specific configuration overrides.
     """
