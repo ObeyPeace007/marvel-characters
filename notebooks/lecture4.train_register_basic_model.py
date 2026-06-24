@@ -1,4 +1,9 @@
 # Databricks notebook source
+# DBTITLE 1,installing the pkgs
+# MAGIC %pip install ../dist/marvel_characters-0.1.0-py3-none-any.whl --force-reinstall --quiet
+
+# COMMAND ----------
+
 import json
 
 import mlflow
@@ -27,8 +32,11 @@ if not is_databricks():
 
 
 config = ProjectConfig.from_yaml(config_path="../project_config_marvel.yml", env="dev")
+# Tells model which features to use, hyperparameters, catalog/schema names
 spark = SparkSession.builder.getOrCreate()
+# Needed to read data from Databricks tables
 tags = Tags(**{"git_sha": "abcd12345", "branch": "main"})
+# Tracks which code version created this model
 
 # COMMAND ----------
 
