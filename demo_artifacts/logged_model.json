@@ -1,154 +1,167 @@
 {
-    "artifact_location": "dbfs:/databricks/mlflow-tracking/2569811775525074/logged_models/m-99dfe5eb37f74d92883800434589c858/artifacts",
-    "creation_timestamp": 1752868911676,
-    "experiment_id": "2569811775525074",
-    "last_updated_timestamp": 1752868922336,
+    "artifact_location": "dbfs:/databricks/mlflow-tracking/3045466607044776/logged_models/m-c0b4374bbb5a4d94bcb18526801bda34/artifacts",
+    "creation_timestamp": 1782293311826,
+    "experiment_id": "3045466607044776",
+    "last_updated_timestamp": 1782293316600,
     "metrics": [
         {
             "_key": "score",
             "_value": 0.7650172860847018,
-            "_timestamp": 1752868943267,
+            "_timestamp": 1782293324430,
             "_step": 0,
-            "_model_id": "m-99dfe5eb37f74d92883800434589c858",
+            "_model_id": "m-c0b4374bbb5a4d94bcb18526801bda34",
             "_dataset_name": "dataset",
-            "_dataset_digest": "daaa439d",
-            "_run_id": "4582b093fcb74b7da7adbc8b2dc0324f"
+            "_dataset_digest": "82b16505",
+            "_run_id": "25b6fe814bfd4e1388ee08cd62b7fef4"
         },
         {
             "_key": "true_negatives",
             "_value": 378.0,
-            "_timestamp": 1752868943267,
+            "_timestamp": 1782293324430,
             "_step": 0,
-            "_model_id": "m-99dfe5eb37f74d92883800434589c858",
+            "_model_id": "m-c0b4374bbb5a4d94bcb18526801bda34",
             "_dataset_name": "dataset",
-            "_dataset_digest": "daaa439d",
-            "_run_id": "4582b093fcb74b7da7adbc8b2dc0324f"
+            "_dataset_digest": "82b16505",
+            "_run_id": "25b6fe814bfd4e1388ee08cd62b7fef4"
         },
         {
             "_key": "false_positives",
             "_value": 4184.0,
-            "_timestamp": 1752868943267,
+            "_timestamp": 1782293324430,
             "_step": 0,
-            "_model_id": "m-99dfe5eb37f74d92883800434589c858",
+            "_model_id": "m-c0b4374bbb5a4d94bcb18526801bda34",
             "_dataset_name": "dataset",
-            "_dataset_digest": "daaa439d",
-            "_run_id": "4582b093fcb74b7da7adbc8b2dc0324f"
+            "_dataset_digest": "82b16505",
+            "_run_id": "25b6fe814bfd4e1388ee08cd62b7fef4"
         },
         {
             "_key": "false_negatives",
             "_value": 166.0,
-            "_timestamp": 1752868943267,
+            "_timestamp": 1782293324430,
             "_step": 0,
-            "_model_id": "m-99dfe5eb37f74d92883800434589c858",
+            "_model_id": "m-c0b4374bbb5a4d94bcb18526801bda34",
             "_dataset_name": "dataset",
-            "_dataset_digest": "daaa439d",
-            "_run_id": "4582b093fcb74b7da7adbc8b2dc0324f"
+            "_dataset_digest": "82b16505",
+            "_run_id": "25b6fe814bfd4e1388ee08cd62b7fef4"
         },
         {
             "_key": "true_positives",
             "_value": 13784.0,
-            "_timestamp": 1752868943267,
+            "_timestamp": 1782293324430,
             "_step": 0,
-            "_model_id": "m-99dfe5eb37f74d92883800434589c858",
+            "_model_id": "m-c0b4374bbb5a4d94bcb18526801bda34",
             "_dataset_name": "dataset",
-            "_dataset_digest": "daaa439d",
-            "_run_id": "4582b093fcb74b7da7adbc8b2dc0324f"
+            "_dataset_digest": "82b16505",
+            "_run_id": "25b6fe814bfd4e1388ee08cd62b7fef4"
         },
         {
             "_key": "example_count",
             "_value": 18512.0,
-            "_timestamp": 1752868943267,
+            "_timestamp": 1782293324430,
             "_step": 0,
-            "_model_id": "m-99dfe5eb37f74d92883800434589c858",
+            "_model_id": "m-c0b4374bbb5a4d94bcb18526801bda34",
             "_dataset_name": "dataset",
-            "_dataset_digest": "daaa439d",
-            "_run_id": "4582b093fcb74b7da7adbc8b2dc0324f"
+            "_dataset_digest": "82b16505",
+            "_run_id": "25b6fe814bfd4e1388ee08cd62b7fef4"
         },
         {
             "_key": "accuracy_score",
             "_value": 0.7650172860847018,
-            "_timestamp": 1752868943267,
+            "_timestamp": 1782293324430,
             "_step": 0,
-            "_model_id": "m-99dfe5eb37f74d92883800434589c858",
+            "_model_id": "m-c0b4374bbb5a4d94bcb18526801bda34",
             "_dataset_name": "dataset",
-            "_dataset_digest": "daaa439d",
-            "_run_id": "4582b093fcb74b7da7adbc8b2dc0324f"
+            "_dataset_digest": "82b16505",
+            "_run_id": "25b6fe814bfd4e1388ee08cd62b7fef4"
         },
         {
             "_key": "recall_score",
             "_value": 0.9881003584229391,
-            "_timestamp": 1752868943267,
+            "_timestamp": 1782293324430,
             "_step": 0,
-            "_model_id": "m-99dfe5eb37f74d92883800434589c858",
+            "_model_id": "m-c0b4374bbb5a4d94bcb18526801bda34",
             "_dataset_name": "dataset",
-            "_dataset_digest": "daaa439d",
-            "_run_id": "4582b093fcb74b7da7adbc8b2dc0324f"
+            "_dataset_digest": "82b16505",
+            "_run_id": "25b6fe814bfd4e1388ee08cd62b7fef4"
         },
         {
             "_key": "precision_score",
             "_value": 0.7671415850400712,
-            "_timestamp": 1752868943267,
+            "_timestamp": 1782293324430,
             "_step": 0,
-            "_model_id": "m-99dfe5eb37f74d92883800434589c858",
+            "_model_id": "m-c0b4374bbb5a4d94bcb18526801bda34",
             "_dataset_name": "dataset",
-            "_dataset_digest": "daaa439d",
-            "_run_id": "4582b093fcb74b7da7adbc8b2dc0324f"
+            "_dataset_digest": "82b16505",
+            "_run_id": "25b6fe814bfd4e1388ee08cd62b7fef4"
         },
         {
             "_key": "f1_score",
             "_value": 0.8637132652421831,
-            "_timestamp": 1752868943267,
+            "_timestamp": 1782293324430,
             "_step": 0,
-            "_model_id": "m-99dfe5eb37f74d92883800434589c858",
+            "_model_id": "m-c0b4374bbb5a4d94bcb18526801bda34",
             "_dataset_name": "dataset",
-            "_dataset_digest": "daaa439d",
-            "_run_id": "4582b093fcb74b7da7adbc8b2dc0324f"
+            "_dataset_digest": "82b16505",
+            "_run_id": "25b6fe814bfd4e1388ee08cd62b7fef4"
         },
         {
             "_key": "log_loss",
-            "_value": 0.5082923607513762,
-            "_timestamp": 1752868943267,
+            "_value": 0.5082923607513763,
+            "_timestamp": 1782293324430,
             "_step": 0,
-            "_model_id": "m-99dfe5eb37f74d92883800434589c858",
+            "_model_id": "m-c0b4374bbb5a4d94bcb18526801bda34",
             "_dataset_name": "dataset",
-            "_dataset_digest": "daaa439d",
-            "_run_id": "4582b093fcb74b7da7adbc8b2dc0324f"
+            "_dataset_digest": "82b16505",
+            "_run_id": "25b6fe814bfd4e1388ee08cd62b7fef4"
         },
         {
             "_key": "roc_auc",
             "_value": 0.6992098589092691,
-            "_timestamp": 1752868943267,
+            "_timestamp": 1782293324430,
             "_step": 0,
-            "_model_id": "m-99dfe5eb37f74d92883800434589c858",
+            "_model_id": "m-c0b4374bbb5a4d94bcb18526801bda34",
             "_dataset_name": "dataset",
-            "_dataset_digest": "daaa439d",
-            "_run_id": "4582b093fcb74b7da7adbc8b2dc0324f"
+            "_dataset_digest": "82b16505",
+            "_run_id": "25b6fe814bfd4e1388ee08cd62b7fef4"
         },
         {
             "_key": "precision_recall_auc",
             "_value": 0.8743929477866188,
-            "_timestamp": 1752868943267,
+            "_timestamp": 1782293324430,
             "_step": 0,
-            "_model_id": "m-99dfe5eb37f74d92883800434589c858",
+            "_model_id": "m-c0b4374bbb5a4d94bcb18526801bda34",
             "_dataset_name": "dataset",
-            "_dataset_digest": "daaa439d",
-            "_run_id": "4582b093fcb74b7da7adbc8b2dc0324f"
+            "_dataset_digest": "82b16505",
+            "_run_id": "25b6fe814bfd4e1388ee08cd62b7fef4"
         }
     ],
-    "model_id": "m-99dfe5eb37f74d92883800434589c858",
+    "model_id": "m-c0b4374bbb5a4d94bcb18526801bda34",
     "model_type": "",
     "name": "lightgbm-pipeline-model",
     "params": {},
-    "source_run_id": "4582b093fcb74b7da7adbc8b2dc0324f",
+    "source_run_id": "25b6fe814bfd4e1388ee08cd62b7fef4",
     "status": 2,
     "status_message": "",
     "tags": {
-        "mlflow.databricks.cluster.id": "0718-194323-xh5euuuy-v2n",
-        "mlflow.loggedModel.artifactLocation": "dbfs:/databricks/mlflow-tracking/2569811775525074/logged_models/m-99dfe5eb37f74d92883800434589c858/artifacts",
+        "mlflow.databricks.cluster.id": "0624-092425-lshh75zk-v2n",
+        "mlflow.databricks.gitRepoCommit": "659c4194f3355212a5e9ab35509c51cf55aa3059",
+        "mlflow.databricks.gitRepoProvider": "gitHub",
+        "mlflow.databricks.gitRepoReference": "main",
+        "mlflow.databricks.gitRepoReferenceType": "branch",
+        "mlflow.databricks.gitRepoRelativePath": "notebooks/lecture4.train_register_basic_model",
+        "mlflow.databricks.gitRepoStatus": "unknown",
+        "mlflow.databricks.gitRepoUrl": "https://github.com/ObeyPeace007/marvel-characters",
+        "mlflow.databricks.notebook.commandID": "1782293066160_8710598204191133337_1d8b86a7f57047d5a56c9d165c70ec7f",
+        "mlflow.databricks.notebookID": "266072713729991",
+        "mlflow.databricks.notebookPath": "/Users/enochobey@outlook.com/marvel-characters/notebooks/lecture4.train_register_basic_model",
+        "mlflow.databricks.webappURL": "https://dbc-2a152245-5adc.cloud.databricks.com",
+        "mlflow.databricks.workspaceID": "7474651083523967",
+        "mlflow.databricks.workspaceURL": "https://dbc-2a152245-5adc.cloud.databricks.com",
+        "mlflow.loggedModel.artifactLocation": "dbfs:/databricks/mlflow-tracking/3045466607044776/logged_models/m-c0b4374bbb5a4d94bcb18526801bda34/artifacts",
         "mlflow.loggedModel.name": "lightgbm-pipeline-model",
-        "mlflow.source.name": "/Users/beskili/Desktop/marvel-characters/.venv/lib/python3.12/site-packages/ipykernel_launcher.py",
-        "mlflow.source.type": "LOCAL",
-        "mlflow.artifacts.spn": "/Mlflow/Artifacts/2569811775525074/LoggedModels/m-99dfe5eb37f74d92883800434589c858/",
-        "mlflow.user": "basak@marvelousmlops.io"
+        "mlflow.source.name": "/Users/enochobey@outlook.com/marvel-characters/notebooks/lecture4.train_register_basic_model",
+        "mlflow.source.type": "NOTEBOOK",
+        "mlflow.artifacts.spn": "/WorkspaceInternal/Mlflow/Artifacts/3045466607044776/LoggedModels/m-c0b4374bbb5a4d94bcb18526801bda34/",
+        "mlflow.user": "enochobey@outlook.com"
     }
 }
