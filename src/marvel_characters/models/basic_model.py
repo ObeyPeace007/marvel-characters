@@ -198,6 +198,295 @@ class BasicModel:
         )
         logger.info(f"✅ Model registered as version {registered_model.version}.")
 
+
+# =============================================================================
+# EXPLANATION OF BASIC_MODEL.PY
+# =============================================================================
+#
+# SECTION 1: IMPORTS
+# ------------------
+# mlflow              → Experiment tracking, model logging
+# DeltaTable          → Access versioned data in Databricks
+# LGBMClassifier      → The ML model (LightGBM)
+# logger              → Pretty logging with emojis
+# MlflowClient        → Programmatic model registry access
+# infer_signature     → Capture input/output schema
+# BaseEstimator, TransformerMixin → Create custom sklearn transformer
+# ColumnTransformer, Pipeline     → Build preprocessing pipeline
+#
+#
+# SECTION 2: __init__
+# -------------------
+# Unpacks config into instance variables for easy access later.
+#
+#   config (YAML)              BasicModel instance
+#   ┌─────────────────┐        ┌─────────────────────────┐
+#   │ num_features    │  ───>  │ self.num_features       │
+#   │ cat_features    │  ───>  │ self.cat_features       │
+#   │ target          │  ───>  │ self.target             │
+#   │ parameters      │  ───>  │ self.parameters         │
+#   └─────────────────┘        └─────────────────────────┘
+#
+#
+# SECTION 3: load_data()
+# ----------------------
+# 1. spark.table(...)        → Load data as Spark DataFrame
+# 2. .toPandas()             → Convert to pandas (sklearn needs pandas)
+# 3. [features]              → Select only feature columns
+# 4. DeltaTable.history()    → Get data version (tracks which data trained model)
+#
+# Why track data version?
+# "This model was trained on version 5 of train_set" - crucial for debugging!
+#
+#
+# SECTION 4: prepare_features()
+# -----------------------------
+# CatToIntTransformer: Converts categorical strings to integers for LightGBM.
+#
+#   Before:              After:
+#   ┌──────────┐        ┌───┐
+#   │ "Male"   │  ───>  │ 0 │
+#   │ "Female" │  ───>  │ 1 │
+#   │ "Unknown"│  ───>  │-1 │  (unknown = -1)
+#   └──────────┘        └───┘
+#
+# Pipeline flow:
+#   Input Data → ColumnTransformer → LGBMClassifier → Prediction
+#   (num cols pass through, cat cols get transformed to integers)
+#
+#
+# SECTION 5: train()
+# ------------------
+# Simple! Fits the entire pipeline (preprocessing + model) on training data.
+#
+#
+# SECTION 6: log_model()
+# ----------------------
+# Step 1: infer_signature    → Documents what model expects as input/output
+# Step 2: log_input          → Links model to exact data version (lineage)
+# Step 3: log_model          → Saves pipeline + signature for later use
+# Step 4: evaluate           → Auto-computes accuracy, f1, precision, recall
+#
+#
+# SECTION 7: model_improved() - CHAMPION/CHALLENGER PATTERN
+# ---------------------------------------------------------
+# Compares NEW model (challenger) vs CURRENT deployed model (champion).
+# Only returns True if new model has better F1 score.
+#
+# Flow:
+#   1. Load current "latest-model" (champion) from registry
+#   2. Evaluate champion on test data → get old metrics
+#   3. Compare: new_f1 >= old_f1 ?
+#   4. If yes → new model wins, ready to become champion
+#   5. If no  → keep current champion, don't deploy new model
+#
+#
+# SECTION 8: register_model()
+# ---------------------------
+# Adds model to Unity Catalog registry for deployment.
+# Creates a new version (v1, v2, v3, ...) each time.
+#
+#
+# FULL FLOW SUMMARY
+# =================
+#
+#   BasicModel(config, tags, spark)
+#          │
+#          ▼
+#      load_data()
+#          │ Load from Databricks tables
+#          ▼
+#     prepare_features()
+#          │ Build preprocessing pipeline
+#          ▼
+#        train()
+#          │ Fit pipeline on data
+#          ▼
+#      log_model()
+#          │ Log to MLflow with signature, data lineage, metrics
+#          ▼
+#     register_model()
+#          │ Add to Unity Catalog
+#          ▼
+#       DONE! Model is tracked and ready for deployment
+#
+#
+# =============================================================================
+# DEEP DIVE: DATA VERSIONING WITH DELTA LAKE
+# =============================================================================
+#
+# Delta Lake automatically versions data on every write operation.
+# You don't need to manually tag data - it's built-in!
+#
+# HOW IT WORKS:
+# -------------
+# # Week 1: Initial load
+# df.write.format("delta").saveAsTable("train_set")  → version 0
+#
+# # Week 2: Append new data
+# new_data.write.mode("append").saveAsTable("train_set")  → version 1
+#
+# # Week 3: More updates
+# more_data.write.mode("append").saveAsTable("train_set")  → version 2
+#
+#
+# VIEW VERSION HISTORY:
+# ---------------------
+# delta_table = DeltaTable.forName(spark, "mlops_dev.marvel_characters.train_set")
+# delta_table.history().show()
+#
+# Output:
+# +-------+-------------------+--------+
+# |version|          timestamp|operation|
+# +-------+-------------------+--------+
+# |      2|2026-06-24 10:00:00|   WRITE|
+# |      1|2026-06-17 10:00:00|   WRITE|
+# |      0|2026-06-10 10:00:00|   WRITE|
+# +-------+-------------------+--------+
+#
+#
+# TIME TRAVEL - READ SPECIFIC VERSION:
+# ------------------------------------
+# # Read version 1 (last week's data)
+# old_data = spark.read.option("versionAsOf", 1).table("train_set")
+#
+# # Or by timestamp
+# old_data = spark.read.option("timestampAsOf", "2026-06-17").table("train_set")
+#
+#
+# HOW THIS FILE USES IT:
+# ----------------------
+# In load_data():
+#   delta_table = DeltaTable.forName(spark, "train_set")
+#   self.train_data_version = delta_table.history().select("version").first()[0]
+#
+# In log_model():
+#   mlflow.log_input(dataset, context="training")
+#   # Records: "Model trained on train_set @ version 2"
+#
+#
+# WEEKLY DATA FLOW:
+# -----------------
+#   Week 1          Week 2          Week 3          Week 4
+#   ─────────────────────────────────────────────────────────
+#   Data v0         Data v1         Data v2         Data v3
+#   (1000 rows)     (+300 rows)     (+500 rows)     (+200 rows)
+#       │               │               │               │
+#       ▼               ▼               ▼               ▼
+#   Model v1        Model v2        Model v3        Model v4
+#       │               │               │               │
+#       └───────────────┴───────────────┴───────────────┘
+#                               │
+#                      MLflow tracks ALL of this!
+#
+#
+# =============================================================================
+# DEEP DIVE: CHAMPION/CHALLENGER PATTERN
+# =============================================================================
+#
+# A production ML deployment strategy: only deploy new models if they're better.
+#
+# THE PROBLEM:
+# ------------
+# "We trained a new model. Should we deploy it?"
+#
+# Bad approach: Just deploy it! 😱
+#   - What if it's worse than current model?
+#   - Users experience degraded predictions
+#   - Hard to rollback
+#
+# Good approach: Champion/Challenger pattern ✅
+#   - Compare before deploying
+#   - Only promote if proven better
+#
+#
+# THE CONCEPT:
+# ------------
+#
+# ┌─────────────────────────────────────────────────────────────────┐
+# │                    PRODUCTION                                   │
+# │  ┌─────────────────────────────────────────────────────────┐   │
+# │  │  CHAMPION (current deployed model)                       │   │
+# │  │  Alias: @latest-model                                    │   │
+# │  │  Version: v3                                             │   │
+# │  │  F1 Score: 0.82                                          │   │
+# │  │  Status: Serving 100% of traffic                         │   │
+# │  └─────────────────────────────────────────────────────────┘   │
+# └─────────────────────────────────────────────────────────────────┘
+#                               │
+#                               │ Compare
+#                               ▼
+# ┌─────────────────────────────────────────────────────────────────┐
+# │                    STAGING / TESTING                            │
+# │  ┌─────────────────────────────────────────────────────────┐   │
+# │  │  CHALLENGER (newly trained model)                        │   │
+# │  │  Version: v4                                             │   │
+# │  │  F1 Score: 0.85  ← Better!                               │   │
+# │  │  Status: Being evaluated                                 │   │
+# │  └─────────────────────────────────────────────────────────┘   │
+# └─────────────────────────────────────────────────────────────────┘
+#
+#
+# THE CODE FLOW (model_improved method):
+# --------------------------------------
+#
+# def model_improved(self) -> bool:
+#     # 1. Get current CHAMPION
+#     champion = client.get_model_version_by_alias(name, "latest-model")
+#
+#     # 2. Evaluate CHAMPION on test data
+#     champion_f1 = evaluate(champion).metrics["f1_score"]  # e.g., 0.82
+#
+#     # 3. Compare with CHALLENGER (new model)
+#     challenger_f1 = self.metrics["f1_score"]  # e.g., 0.85
+#
+#     # 4. Decision
+#     if challenger_f1 >= champion_f1:
+#         return True   # Challenger wins! Promote to champion
+#     else:
+#         return False  # Champion stays, discard challenger
+#
+#
+# WEEKLY RETRAINING WORKFLOW:
+# ---------------------------
+#
+#   Weekly Retraining Job
+#            │
+#            ▼
+#   ┌─────────────────┐
+#   │ Train new model │
+#   │ (Challenger)    │
+#   └────────┬────────┘
+#            │
+#            ▼
+#   ┌─────────────────┐
+#   │ model_improved()│──── No ────> Discard challenger
+#   │ Compare metrics │              Keep champion
+#   └────────┬────────┘
+#            │ Yes
+#            ▼
+#   ┌─────────────────┐
+#   │ register_model()│
+#   │ Set alias       │
+#   │ @latest-model   │
+#   └────────┬────────┘
+#            │
+#            ▼
+#      Challenger becomes
+#      new Champion! 🏆
+#
+#
+# WHY THIS MATTERS:
+# -----------------
+# | Without Champion/Challenger | With Champion/Challenger      |
+# |-----------------------------|-------------------------------|
+# | Deploy blindly              | Only deploy if proven better  |
+# | Rollback is painful         | Champion always there         |
+# | No comparison metrics       | Clear decision criteria       |
+# | "Who broke production?"     | Automated quality gate        |
+#
+# =============================================================================
+
         latest_version = registered_model.version
 
         client = MlflowClient()
